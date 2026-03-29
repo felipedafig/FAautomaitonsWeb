@@ -14,7 +14,13 @@
       "Bash(npm install:*)",
       "Bash(taskkill //F //IM node.exe)",
       "Bash(taskkill:*)",
-      "Bash(curl -s http://localhost:3001)"
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(ls /c/dev/Personal/FAautomaitons/node_modules/lucide-react/dist/esm/icons/*.js)",
+      "Bash(xargs -I {} basename {} .js)",
+      "Bash(grep -r \"lucide-react\\\\|react-icons\\\\|simple-icons\" /c/dev/Personal/FAautomaitons/apps/web /c/dev/Personal/FAautomaitons/packages/ui --include=*.tsx --include=*.ts)",
+      "Bash(curl:*)",
+      "WebFetch(domain:cdn.simpleicons.org)",
+      "Bash(npm pack:*)"
     ]
   },
   "enabledPlugins": {
