@@ -3,7 +3,7 @@ import { Avatar, AvatarImage } from "@workspace/ui/components/avatar"
 
 export interface TestimonialAuthor {
   name: string
-  handle: string
+  location: string
   avatar: string
 }
 
@@ -44,7 +44,7 @@ export function TestimonialCard({
             {author.name}
           </h3>
           <p className="text-sm text-muted-foreground">
-            {author.handle}
+            {author.location}
           </p>
         </div>
       </div>

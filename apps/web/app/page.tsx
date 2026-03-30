@@ -306,34 +306,32 @@ export default function Page() {
       </div>
       <div id="testimonials">
       <TestimonialsSection
-        title="Trusted by developers worldwide"
-        description="Join thousands of developers who are already building the future with our AI platform"
+        title="Trusted by hosts and hoteliers"
+        description="See how property managers across Europe are saving time and delighting guests with FA Automations"
         testimonials={[
           {
             author: {
               name: "Emma Thompson",
-              handle: "@emmaai",
+              location: "London, United Kingdom",
               avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face"
             },
-            text: "Using this AI platform has transformed how we handle data analysis. The speed and accuracy are unprecedented.",
-            href: "https://twitter.com/emmaai"
+            text: "Since switching to FA Automations, our guest response time dropped from hours to seconds. Check-ins run themselves now."
           },
           {
             author: {
               name: "David Park",
-              handle: "@davidtech",
+              location: "Copenhagen, Denmark",
               avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
             },
-            text: "The API integration is flawless. We've reduced our development time by 60% since implementing this solution.",
-            href: "https://twitter.com/davidtech"
+            text: "Managing 18 apartments used to be a full-time job. Now the workflows handle bookings, cleaners, and reviews automatically."
           },
           {
             author: {
               name: "Sofia Rodriguez",
-              handle: "@sofiaml",
+              location: "Barcelona, Spain",
               avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face"
             },
-            text: "Finally, an AI tool that actually understands context! The accuracy in natural language processing is impressive."
+            text: "Our review scores went up after automating guest follow-ups. The best investment we made for our boutique hotel."
           }
         ]}
       />

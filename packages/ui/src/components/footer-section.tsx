@@ -11,6 +11,9 @@ import {
   DialogTrigger,
 } from "@workspace/ui/components/dialog"
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
+import { Input } from "@workspace/ui/components/input"
+import { Textarea } from "@workspace/ui/components/textarea"
+import { Label } from "@workspace/ui/components/label"
 
 function LegalDialog({
   trigger,
@@ -302,14 +305,76 @@ function Footerdemo() {
               Still have questions?
             </h2>
             <p className="mb-6 text-muted-foreground">
-              We&apos;re here to help you. Reach out to our support team.
+              We&apos;re here to help you. Reach out to our team.
             </p>
-            <Button
-              size="lg"
-              className="rounded-full bg-primary px-6 text-primary-foreground shadow-lg shadow-primary/25 transition-transform duration-300 hover:translate-y-[-2px]"
-            >
-              Contact Support
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  size="lg"
+                  className="rounded-full bg-primary px-6 text-primary-foreground shadow-lg shadow-primary/25 transition-transform duration-300 hover:translate-y-[-2px]"
+                >
+                  Ask Us
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Contact Us</DialogTitle>
+                  <DialogDescription>
+                    Send us a message and we&apos;ll get back to you as soon as
+                    possible.
+                  </DialogDescription>
+                </DialogHeader>
+                <form
+                  action="https://formsubmit.co/filip.almeida@faautomations.com"
+                  method="POST"
+                  className="space-y-4"
+                >
+                  <input
+                    type="hidden"
+                    name="_subject"
+                    value="New contact from FA Automations website"
+                  />
+                  <input type="hidden" name="_captcha" value="false" />
+                  <input
+                    type="hidden"
+                    name="_next"
+                    value={typeof window !== "undefined" ? window.location.href : "/"}
+                  />
+                  <div className="space-y-2">
+                    <Label htmlFor="contact-name">Name</Label>
+                    <Input
+                      id="contact-name"
+                      name="name"
+                      placeholder="Your name"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contact-email">Email</Label>
+                    <Input
+                      id="contact-email"
+                      name="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contact-message">Message</Label>
+                    <Textarea
+                      id="contact-message"
+                      name="message"
+                      placeholder="How can we help you?"
+                      rows={4}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full">
+                    Send Message
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
             <div className="absolute -right-4 top-0 h-24 w-24 rounded-full bg-primary/10 blur-2xl" />
           </div>
           <div>
@@ -322,37 +387,73 @@ function Footerdemo() {
                 Home
               </a>
               <a
-                href="#"
+                href="#how-we-do-it"
                 className="block transition-colors hover:text-primary"
               >
-                About Us
+                How It Works
               </a>
               <a
-                href="#"
+                href="#testimonials"
                 className="block transition-colors hover:text-primary"
               >
-                Services
+                Testimonials
               </a>
               <a
-                href="#"
+                href="#pricing"
                 className="block transition-colors hover:text-primary"
               >
-                Products
+                Pricing
               </a>
               <a
-                href="#"
+                href="#faqs"
                 className="block transition-colors hover:text-primary"
               >
-                Contact
+                FAQs
+              </a>
+              <a
+                href="/team"
+                className="block transition-colors hover:text-primary"
+              >
+                Team
               </a>
             </nav>
           </div>
           <div>
             <h3 className="mb-4 text-lg font-semibold">Contact Us</h3>
-            <address className="space-y-2 text-sm not-italic">
-              <p>Phone: (+45) 61448587</p>
-              <p>Email: contact@faautomations.com</p>
-            </address>
+            <div className="flex gap-6">
+              <div className="flex flex-col items-center gap-2 text-center">
+                <img
+                  src="/team/member-1.jpg"
+                  alt="Felipe Figueiredo"
+                  className="h-14 w-14 rounded-full object-cover ring-2 ring-border"
+                />
+                <div>
+                  <p className="text-sm font-medium">Felipe</p>
+                  <a
+                    href="mailto:filip.almeida@faautomations.com"
+                    className="text-xs text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    filip.almeida@
+                  </a>
+                </div>
+              </div>
+              <div className="flex flex-col items-center gap-2 text-center">
+                <img
+                  src="/team/member-2.jpg"
+                  alt="Partner"
+                  className="h-14 w-14 rounded-full object-cover ring-2 ring-border"
+                />
+                <div>
+                  <p className="text-sm font-medium">Partner</p>
+                  <a
+                    href="mailto:contact@faautomations.com"
+                    className="text-xs text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    contact@
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row">
