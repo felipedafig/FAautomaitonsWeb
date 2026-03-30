@@ -24,7 +24,13 @@
       "Bash(git worktree:*)",
       "Bash(ls -la \"C:/dev/Personal/FAautomaitons/\"*automations*.png)",
       "Bash(ls -la \"C:/dev/Personal/FAautomaitons/\"*FA*.png)",
-      "Bash(ls C:/dev/Personal/FAautomaitons/*.jpg C:/dev/Personal/FAautomaitons/*.jpeg C:/dev/Personal/FAautomaitons/*.png)"
+      "Bash(ls C:/dev/Personal/FAautomaitons/*.jpg C:/dev/Personal/FAautomaitons/*.jpeg C:/dev/Personal/FAautomaitons/*.png)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:cdn.jsdelivr.net)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git merge:*)",
+      "Bash(git stash:*)"
     ]
   },
   "enabledPlugins": {
