@@ -10,9 +10,18 @@ import React, {
   useContext,
 } from "react";
 import confetti from "canvas-confetti";
-import { Check, Star as LucideStar } from "lucide-react";
-import { PopupModal } from "react-calendly";
+import { Check, Star as LucideStar, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
+import { InlineWidget } from "react-calendly";
 import NumberFlow from "@number-flow/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@workspace/ui/components/dialog";
+import { Input } from "@workspace/ui/components/input";
+import { Label } from "@workspace/ui/components/label";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { clsx, type ClassValue } from "clsx";
@@ -422,11 +431,159 @@ function PricingToggle() {
   );
 }
 
+// Signup Modal Component (two-step: form → Calendly)
+function SignupModal({
+  open,
+  onOpenChange,
+  planName,
+  calendlyUrl,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  planName: string;
+  calendlyUrl?: string;
+}) {
+  const [step, setStep] = useState<"form" | "calendly">("form");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      await fetch(
+        "https://formsubmit.co/ajax/filip.almeida@faautomations.com",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(Object.fromEntries(formData)),
+        },
+      );
+      setStep("calendly");
+    } catch {
+      // Still advance — FormSubmit may block CORS on first use
+      setStep("calendly");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClose = (value: boolean) => {
+    onOpenChange(value);
+    if (!value) {
+      // Reset after close animation
+      setTimeout(() => setStep("form"), 300);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent className={cn(
+        "transition-all duration-300",
+        step === "calendly" ? "sm:max-w-2xl" : "sm:max-w-md",
+      )}>
+        {step === "form" ? (
+          <>
+            <DialogHeader>
+              <DialogTitle>Get Started with {planName}</DialogTitle>
+              <DialogDescription>
+                Tell us a bit about yourself and we&apos;ll set everything up
+                for you.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input type="hidden" name="_subject" value={`New signup: ${planName} plan`} />
+              <input type="hidden" name="_captcha" value="false" />
+              <input type="hidden" name="plan" value={planName} />
+              <div className="space-y-2">
+                <Label htmlFor={`signup-name-${planName}`}>Name</Label>
+                <Input
+                  id={`signup-name-${planName}`}
+                  name="name"
+                  placeholder="Your name"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor={`signup-email-${planName}`}>Email</Label>
+                <Input
+                  id={`signup-email-${planName}`}
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor={`signup-property-${planName}`}>
+                  Property / Hotel Name
+                </Label>
+                <Input
+                  id={`signup-property-${planName}`}
+                  name="property"
+                  placeholder="e.g. Seaside Boutique Hotel"
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    Continue
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </form>
+          </>
+        ) : (
+          <>
+            <DialogHeader>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                <DialogTitle>You&apos;re signed up!</DialogTitle>
+              </div>
+              <DialogDescription>
+                Now let&apos;s schedule a quick call to get your automations
+                running.
+              </DialogDescription>
+            </DialogHeader>
+            {calendlyUrl ? (
+              <div className="h-[520px] -mx-6 -mb-6">
+                <InlineWidget
+                  url={calendlyUrl}
+                  styles={{ height: "100%", width: "100%" }}
+                />
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-8">
+                We&apos;ll be in touch shortly to schedule your onboarding
+                call.
+              </p>
+            )}
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 // Pricing Card Component
 function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
   const { isMonthly, calendlyUrl } = useContext(PricingContext);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
   const isTailored = isNaN(Number(plan.price));
 
   return (
@@ -521,36 +678,21 @@ function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
         </ul>
 
         <div className="mt-auto pt-8">
-          {isTailored && calendlyUrl ? (
+          {isTailored ? (
             <>
               <button
-                onClick={() => setIsCalendlyOpen(true)}
+                onClick={() => setIsSignupOpen(true)}
                 className="w-full h-11 rounded-md px-8 text-sm font-medium relative overflow-hidden bg-gradient-to-r from-blue-500/20 via-violet-500/20 to-purple-500/20 border border-violet-400/40 text-violet-300 hover:border-violet-400/70 hover:from-blue-500/30 hover:via-violet-500/30 hover:to-purple-500/30 transition-all duration-300"
               >
                 {plan.buttonText}
               </button>
-              {isCalendlyOpen && (
-                <PopupModal
-                  url={calendlyUrl}
-                  onModalClose={() => setIsCalendlyOpen(false)}
-                  open={isCalendlyOpen}
-                  rootElement={document.body}
-                />
-              )}
+              <SignupModal
+                open={isSignupOpen}
+                onOpenChange={setIsSignupOpen}
+                planName={plan.name}
+                calendlyUrl={calendlyUrl}
+              />
             </>
-          ) : (
-            <a
-              href={plan.href}
-              className={cn(
-                buttonVariants({
-                  variant: plan.isPopular ? "default" : "outline",
-                  size: "lg",
-                }),
-                "w-full",
-              )}
-            >
-              {plan.buttonText}
-            </a>
           )}
         </div>
       </div>

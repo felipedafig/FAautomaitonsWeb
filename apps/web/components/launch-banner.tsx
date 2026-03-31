@@ -7,7 +7,7 @@ export function LaunchBanner({ calendlyUrl }: { calendlyUrl?: string }) {
   const [isCalendlyOpen, setIsCalendlyOpen] = useState(false)
 
   return (
-    <div className="relative overflow-hidden mx-auto max-w-4xl my-16 px-4">
+    <div className="relative overflow-hidden mx-auto max-w-5xl my-16 px-4">
       <div className="relative rounded-2xl border border-red-500/30 bg-red-950/20 backdrop-blur-sm p-8 md:p-10">
         {/* Subtle glow */}
         <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-80 h-40 bg-red-500/10 blur-3xl rounded-full pointer-events-none" />
@@ -28,7 +28,7 @@ export function LaunchBanner({ calendlyUrl }: { calendlyUrl?: string }) {
           <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white/90">
             We&apos;re building workflows for{" "}
             <span className="text-red-400">10 hotels</span>
-            {" "}— completely free
+            {" "}| completely free
           </h3>
 
           {/* Body */}
