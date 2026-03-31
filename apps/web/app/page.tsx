@@ -306,8 +306,8 @@ export default function Page() {
       </div>
       <div id="testimonials">
       <TestimonialsSection
-        title="Trusted by hosts and hoteliers"
-        description="See how property managers across Europe are saving time and delighting guests with FA Automations"
+        title="Trusted by our first clients"
+        description="Early adopters already seeing real results with their automated workflows"
         testimonials={[
           {
             author: {
