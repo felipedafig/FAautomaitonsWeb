@@ -11,6 +11,7 @@ import React, {
 } from "react";
 import confetti from "canvas-confetti";
 import { Check, Star as LucideStar } from "lucide-react";
+import { PopupModal } from "react-calendly";
 import NumberFlow from "@number-flow/react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -263,12 +264,14 @@ interface PricingSectionProps {
   plans: PricingPlan[];
   title?: string;
   description?: string;
+  calendlyUrl?: string;
 }
 
 // Context for state management
 const PricingContext = createContext<{
   isMonthly: boolean;
   setIsMonthly: (value: boolean) => void;
+  calendlyUrl?: string;
 }>({
   isMonthly: true,
   setIsMonthly: () => {},
@@ -279,6 +282,7 @@ export function PricingSection({
   plans,
   title = "Simple, Transparent Pricing",
   description = "Choose the plan that's right for you. All plans include our core features and support.",
+  calendlyUrl,
 }: PricingSectionProps) {
   const [isMonthly, setIsMonthly] = useState(true);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -293,7 +297,7 @@ export function PricingSection({
   };
 
   return (
-    <PricingContext.Provider value={{ isMonthly, setIsMonthly }}>
+    <PricingContext.Provider value={{ isMonthly, setIsMonthly, calendlyUrl }}>
       <div
         ref={containerRef}
         onMouseMove={handleMouseMove}
@@ -420,8 +424,10 @@ function PricingToggle() {
 
 // Pricing Card Component
 function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
-  const { isMonthly } = useContext(PricingContext);
+  const { isMonthly, calendlyUrl } = useContext(PricingContext);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+  const isTailored = isNaN(Number(plan.price));
 
   return (
     <motion.div
@@ -439,10 +445,12 @@ function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
         delay: index * 0.15,
       }}
       className={cn(
-        "rounded-2xl p-8 flex flex-col relative bg-background/70 backdrop-blur-sm",
+        "rounded-2xl flex flex-col relative bg-background/70 backdrop-blur-sm",
         plan.isPopular
-          ? "border-2 border-primary shadow-xl"
-          : "border border-border",
+          ? "border-2 border-primary shadow-xl p-8 lg:p-10"
+          : isTailored
+            ? "border border-violet-500/30 p-8"
+            : "border border-border p-8",
       )}
     >
       {plan.isPopular && (
@@ -456,30 +464,45 @@ function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
         </div>
       )}
       <div className="flex-1 flex flex-col text-center">
-        <h3 className="text-xl font-semibold text-foreground">{plan.name}</h3>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {plan.description}
-        </p>
-        <div className="mt-6 flex items-baseline justify-center gap-x-1">
-          <span className="text-5xl font-bold tracking-tight text-foreground">
-            <NumberFlow
-              value={
-                isMonthly ? Number(plan.price) : Number(plan.yearlyPrice)
-              }
-              format={{
-                style: "currency",
-                currency: "EUR",
-                minimumFractionDigits: 0,
-              }}
-              className="font-variant-numeric: tabular-nums"
-            />
+        {!isTailored && (
+          <>
+            <h3 className="text-xl font-semibold text-foreground">{plan.name}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {plan.description}
+            </p>
+          </>
+        )}
+        <div className={cn("flex items-baseline justify-center gap-x-1", isTailored ? "mt-2" : "mt-6")}>
+          <span className={cn(
+            "font-bold tracking-tight",
+            isTailored
+              ? "text-6xl bg-gradient-to-r from-blue-400 via-violet-400 to-purple-500 bg-clip-text text-transparent"
+              : "text-5xl text-foreground",
+          )}>
+            {isTailored ? (
+              plan.price
+            ) : (
+              <NumberFlow
+                value={
+                  isMonthly ? Number(plan.price) : Number(plan.yearlyPrice)
+                }
+                format={{
+                  style: "currency",
+                  currency: "EUR",
+                  minimumFractionDigits: 0,
+                }}
+                className="font-variant-numeric: tabular-nums"
+              />
+            )}
           </span>
-          <span className="text-sm font-semibold leading-6 tracking-wide text-muted-foreground">
-            / {plan.period}
-          </span>
+          {!isTailored && (
+            <span className="text-sm font-semibold leading-6 tracking-wide text-muted-foreground">
+              / {plan.period}
+            </span>
+          )}
         </div>
         <p className="text-xs text-muted-foreground mt-2">
-          {isMonthly ? "Billed Monthly" : "Billed Annually"}
+          {isTailored ? "You choose, we build" : isMonthly ? "Billed Monthly" : "Billed Annually"}
         </p>
 
         <ul
@@ -498,18 +521,37 @@ function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
         </ul>
 
         <div className="mt-auto pt-8">
-          <a
-            href={plan.href}
-            className={cn(
-              buttonVariants({
-                variant: plan.isPopular ? "default" : "outline",
-                size: "lg",
-              }),
-              "w-full",
-            )}
-          >
-            {plan.buttonText}
-          </a>
+          {isTailored && calendlyUrl ? (
+            <>
+              <button
+                onClick={() => setIsCalendlyOpen(true)}
+                className="w-full h-11 rounded-md px-8 text-sm font-medium relative overflow-hidden bg-gradient-to-r from-blue-500/20 via-violet-500/20 to-purple-500/20 border border-violet-400/40 text-violet-300 hover:border-violet-400/70 hover:from-blue-500/30 hover:via-violet-500/30 hover:to-purple-500/30 transition-all duration-300"
+              >
+                {plan.buttonText}
+              </button>
+              {isCalendlyOpen && (
+                <PopupModal
+                  url={calendlyUrl}
+                  onModalClose={() => setIsCalendlyOpen(false)}
+                  open={isCalendlyOpen}
+                  rootElement={document.body}
+                />
+              )}
+            </>
+          ) : (
+            <a
+              href={plan.href}
+              className={cn(
+                buttonVariants({
+                  variant: plan.isPopular ? "default" : "outline",
+                  size: "lg",
+                }),
+                "w-full",
+              )}
+            >
+              {plan.buttonText}
+            </a>
+          )}
         </div>
       </div>
     </motion.div>

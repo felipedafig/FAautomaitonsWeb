@@ -8,6 +8,7 @@ import { Header } from "@workspace/ui/components/header-1"
 import { FAQSection } from "@workspace/ui/components/faq-section"
 import { Footerdemo } from "@workspace/ui/components/footer-section"
 import { cn } from "@workspace/ui/lib/utils"
+import { LaunchBanner } from "../components/launch-banner"
 
 const appLogos: { name: string; color: string; path: string }[] = [
   {
@@ -336,36 +337,39 @@ export default function Page() {
         ]}
       />
       </div>
+      <LaunchBanner calendlyUrl={process.env.NEXT_PUBLIC_CALENDLY_URL} />
       <div id="pricing">
       <PricingSection
         plans={[
           {
             name: "Starter",
-            price: "29",
-            yearlyPrice: "23",
+            price: "20",
+            yearlyPrice: "16",
             period: "month",
             features: [
-              "Up to 5 rental properties",
+              "15-day free trial — money back if it doesn\u2019t help",
               "Automated guest messaging",
-              "Check-in & check-out reminders",
+              "24/7 AI virtual receptionist",
               "Basic booking sync",
-              "Email support",
+              "Self-service knowledge base",
             ],
             description:
               "Great for small hosts getting started with automation.",
-            buttonText: "Start Free Trial",
+            buttonText: "Get Started",
             href: "#",
           },
           {
             name: "Professional",
-            price: "59",
-            yearlyPrice: "47",
+            price: "35",
+            yearlyPrice: "28",
             period: "month",
             features: [
-              "Up to 25 rental properties",
+              "15-day free trial — money back if it doesn\u2019t help",
               "Multi-platform booking sync",
               "Automated reviews & follow-ups",
               "Cleaning & maintenance task scheduling",
+              "24/7 AI virtual receptionist",
+              "Upselling & cross-selling automations",
               "Priority support & analytics dashboard",
             ],
             description:
@@ -375,25 +379,24 @@ export default function Page() {
             isPopular: true,
           },
           {
-            name: "Enterprise",
-            price: "119",
-            yearlyPrice: "95",
+            name: "Tailored",
+            price: "Custom",
+            yearlyPrice: "Custom",
             period: "month",
             features: [
-              "Unlimited properties",
+              "15-day free trial — money back if it doesn\u2019t help",
+              "Pick only the features you need",
               "Custom workflow automations",
-              "PMS & channel manager integrations",
-              "Dedicated account manager",
-              "Revenue optimization & reporting",
             ],
             description:
-              "For hotel groups and property management companies.",
-            buttonText: "Contact Sales",
+              "Fully personalized to your business — you choose, we build.",
+            buttonText: "Book a Call",
             href: "#",
           },
         ]}
         title="Find the Perfect Plan"
         description={`Automation plans built for hotels, vacation rentals, and property managers.\nScale effortlessly as your portfolio grows.`}
+        calendlyUrl={process.env.NEXT_PUBLIC_CALENDLY_URL}
       />
       </div>
       <div id="faqs">
