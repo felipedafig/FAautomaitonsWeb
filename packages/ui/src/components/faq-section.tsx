@@ -56,9 +56,9 @@ function FAQCard({ faq }: { faq: { question: string; answer: string; category: s
 
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="relative z-10 w-full p-6 text-left"
+          className="relative z-10 w-full px-4 py-3 sm:p-6 text-left"
         >
-          <div className="flex items-start gap-3 sm:gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <motion.div
               className="hidden sm:flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10"
               animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
@@ -67,17 +67,17 @@ function FAQCard({ faq }: { faq: { question: string; answer: string; category: s
               <HelpCircle className="h-5 w-5 text-primary" />
             </motion.div>
 
-            <div className="flex-1">
-              <div className="mb-2 flex items-center gap-2">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 sm:mb-1">
                 <Badge
                   variant="secondary"
-                  className="bg-primary/10 text-xs uppercase tracking-wider text-primary"
+                  className="bg-primary/10 text-[10px] sm:text-xs uppercase tracking-wider text-primary px-1.5 py-0 sm:px-2.5 sm:py-0.5"
                 >
                   {faq.category}
                 </Badge>
               </div>
 
-              <h3 className="text-lg font-semibold text-foreground">
+              <h3 className="text-sm sm:text-lg font-semibold text-foreground leading-snug mt-1">
                 {faq.question}
               </h3>
             </div>
@@ -103,7 +103,7 @@ function FAQCard({ faq }: { faq: { question: string; answer: string; category: s
             }}
             className="overflow-hidden"
           >
-            <div className="pt-4 pl-0 sm:pl-14">
+            <div className="pt-3 sm:pt-4 pl-0 sm:pl-14">
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {faq.answer}
               </p>
