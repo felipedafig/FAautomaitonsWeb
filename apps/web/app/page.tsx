@@ -13,6 +13,8 @@ import { cn } from "@workspace/ui/lib/utils"
 import { LaunchBanner } from "../components/launch-banner"
 import { useAppT } from "@/i18n"
 
+const CALENDLY_URL = "https://calendly.com/felipedafig/30min"
+
 const appLogos: { name: string; color: string; path: string }[] = [
   {
     name: "Google Sheets",
@@ -184,7 +186,7 @@ export default function Page() {
       <Header />
       <div className="container mx-auto px-4">
         <div className="grid gap-6 sm:gap-8 py-8 sm:py-12 lg:py-20 items-center lg:grid-cols-2">
-          <Hero calendlyUrl={process.env.NEXT_PUBLIC_CALENDLY_URL} />
+          <Hero calendlyUrl={CALENDLY_URL} />
           <div className="flex justify-center lg:justify-end">
             <HeroInfoCard />
           </div>
@@ -373,13 +375,13 @@ export default function Page() {
         }))}
       />
       </div>
-      <LaunchBanner calendlyUrl={process.env.NEXT_PUBLIC_CALENDLY_URL} />
+      <LaunchBanner calendlyUrl={CALENDLY_URL} />
       <div id="pricing">
       <PricingSection
         plans={p.pricing.plans.map((plan) => ({ ...plan, href: "#" }))}
         title={p.pricing.title}
         description={p.pricing.description}
-        calendlyUrl={process.env.NEXT_PUBLIC_CALENDLY_URL}
+        calendlyUrl={CALENDLY_URL}
       />
       </div>
       <div id="faqs">
